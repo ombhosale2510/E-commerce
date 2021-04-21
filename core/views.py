@@ -117,7 +117,8 @@ def remove_from_cart(request, slug):
             return redirect("core:product", slug=slug)
     else:
         # Add a message saying the user doesn't have an order
-        messages.info(request, "You do not have an active order!")
+        messages.info(
+            request, "Item is not in your cart | You do not have an active order")
         return redirect("core:product", slug=slug)
 
 

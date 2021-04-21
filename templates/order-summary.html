@@ -1,85 +1,157 @@
-{% extends "base.html" %}
-
+{% extends "base.html" %} {% load static %}
+{% block checkoutactive %} active {% endblock checkoutactive %}
 {% block title %}Shopping Bag{% endblock title %}
+{% block head %}
+{% endblock head %}
 {% block body %}
 
-<main>
-    <div class="container mt-3">
-        <div class="table-responsive text-nowrap">
-            <h2 class="text-center"><b>Shopping Bag</b></h2>
-            <table class="table mt-3" style="color: white;">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Item title</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Discounted Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Total Item Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order_item in object.items.all %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ order_item.item.title }}</td>
-                        <td>{{ order_item.item.price }}&#8377</td>
-                        <td>{{ order_item.item.discount_price }}&#8377</td>
-                        <td><a href="{% url 'core:cart_item_remove' order_item.item.slug %}"><img
-                                    src="/static/img/svg/cart-dash.svg" class="mr-2" alt="cart-dash"></a>
-                            {{ order_item.quantity }}
-                            <a href="{% url 'core:cart_add' order_item.item.slug %}"><img
-                                    src="/static/img/svg/cart-plus.svg" class="ml-2" alt="cart-plus"></a>
-                        </td>
-                        <td>
-                            {% if order_item.item.discount_price %}
-                            {{ order_item.get_total_discount_item_price }}&#8377
-                            (Saving {{ order_item.get_amt_saved }}&#8377)
-                            {% else %}
-                            {{ order_item.get_total_item_price }}&#8377
-                            {% endif %}
+<body class="">
 
+    <!--Main layout-->
+    <main class="pt-4">
+        <div class="container wow fadeIn">
+
+            <!-- Heading -->
+            <h2 class="my-5 h2 text-center">Shopping Bag</h2>
+
+            <!--Grid row-->
+            <div class="row">
+
+                <!--Grid column-->
+                <div class="col-md-8 mb-4">
+
+                    <!--Card-->
+                    <div class="card" style="background-color: #181818; color: white;">
+
+                        <!--Card content-->
+                        {% for order_item in object.items.all %}
+                        <!--Grid row-->
+                        <div class="row">
+
+                            <!--Grid column-->
+                            <div class="mb-2">
+
+                                <img src="{{ order_item.item.image.url }}" class="img-fluid rounded m-3 ml-5"
+                                    alt="{{ order_item.item.title } }image" style="width:100px;">
+
+                            </div>
+                            <!--Grid column-->
+
+                            <!--Grid column-->
+                            <div class="col-md-6 mb-2 mt-2 float-left">
+                                <h5>
+                                    {{ order_item.item.title }}</h5>
+
+                                <h5 class="mt-3">{% if order_item.item.discount_price %}
+                                    <span><del>{{ order_item.item.price }}&#8377</del></span>
+                                    {{ order_item.get_total_discount_item_price }}&#8377
+                                    (Saving {{ order_item.get_amt_saved }}&#8377)
+                                    {% else %}
+                                    {{ order_item.get_total_item_price }}&#8377
+                                    {% endif %}
+                                </h5>
+                                <a href="{% url 'core:cart_item_remove' order_item.item.slug %}"><img
+                                        src="/static/img/svg/cart-dash.svg" class="mr-2" alt="cart-dash"></a>
+                                <b>{{ order_item.quantity }}</b>
+                                <a href="{% url 'core:cart_add' order_item.item.slug %}"><img
+                                        src="/static/img/svg/cart-plus.svg" class="ml-2" alt="cart-plus"></a>
+
+                            </div>
+                            <br>
                             <a href="{% url 'core:cart_remove' order_item.item.slug %}"><img
-                                    src="/static/img/svg/trash.svg" class="float-right" alt="trash"></a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="text-center"><b>Your cart is empty</b></td>
-                    </tr>
-                    <tr class="text-center">
-                        <div class="container text-center">
-                            <td colspan=" 6">
-                                <a class="btn btn-outline-light mx-3" href="/"><b>CONTINUE
-                                        SHOPPING</b></a>
-                            </td>
-                        </div>
-                    </tr>
-                    {% endfor %}
-                    {% if object.get_total %}
-                    <tr>
-                        <td colspan="5">
-                            <h5><b>Total</h5></b>
-                        </td>
-                        <td>
-                            <h5><b> {{ object.get_total }}&#8377 </h5></b>
-                        </td>
-                    </tr>
-                    <tr class="text-center">
-                        <div class="container text-center">
-                            <td colspan=" 6">
-                                <a class="btn btn-outline-light mx-3" href="/"><b>CONTINUE
-                                        SHOPPING</b></a>
-                                <a class="btn btn-outline-light mx-3" href="/checkout"><b>CONTINUE TO
-                                        CHECKOUT</b></a>
-                            </td>
-                        </div>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+                                    src="/static/img/svg/trash.svg" class="mt-3" alt="trash"></a>
+                            <!--Grid column-->
 
+                        </div>
+                        {% empty %}
+                        <div class="text-center mt-3"><b>Your cart is empty</b></div>
+                        <br>
+                        <a class="btn btn-outline-light mb-3" href="/"><b>CONTINUE
+                                SHOPPING</b></a>
+                        {% endfor %}
+                        <a class="btn btn-outline-light mb-3" href="/"><b>CONTINUE
+                                SHOPPING</b></a>
+
+
+                    </div>
+                    <!--/.Card-->
+
+                </div>
+                <!--/Grid column-->
+
+                <!--Grid column-->
+                <div class="col-md-4 mb-4">
+
+                    <!-- Heading -->
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-white">Your cart</span>
+                        <span class="badge badge-secondary badge-pill">3</span>
+                    </h4>
+
+                    <!-- Cart -->
+                    <div class="card bg-dark">
+                        <ul class="list-group mb-3 z-depth-1">
+                            {% for order_item in object.items.all %}
+                            <li class="list-group-item d-flex justify-content-between lh-condensed bg-dark">
+                                <div>
+                                    <h6 class="my-0">{{ order_item.item.title }}</h6>
+                                    {% if order_item.item.discount_price %}
+                                    <small class="text-muted"><del>
+                                            {{ order_item.item.price}}&#8377
+                                        </del></small>
+                                    {% endif %}
+                                </div>
+                                <span class="text-muted">
+                                    {% if order_item.item.discount_price %}
+                                    {{ order_item.get_total_discount_item_price }}&#8377
+                                    {% else %}
+                                    {{ order_item.get_total_item_price }}&#8377
+                                    {% endif %}
+                                </span>
+                            </li>
+                            {% endfor %}
+                            <li class="list-group-item d-flex justify-content-between bg-dark">
+                                <div class="text-success">
+                                    <h6 class="my-0">Promo code</h6>
+                                    <small>EXAMPLECODE</small>
+                                </div>
+                                <span class="text-success">-5&#8377</span>
+                            </li>
+                            {% if object.get_total %}
+                            <li class="list-group-item d-flex justify-content-between bg-dark">
+                                <span>Total</span>
+                                <strong>{{ object.get_total }}&#8377</strong>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <!-- Cart -->
+
+                        <!-- Promo code -->
+                        <form class="card p-2 bg-dark">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-dark" placeholder="Promo code"
+                                    aria-label="Recipient's username" aria-describedby="basic-addon2"
+                                    style="color: white;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary btn-md waves-effect m-0"
+                                        type="button">Redeem</button>
+                                </div>
+
+                            </div>
+                        </form>
+                        <!-- Promo code -->
+                        <a class="btn btn-outline-light mx-3" href="/checkout"><b>CONTINUE TO
+                                CHECKOUT</b></a>
+
+                    </div>
+                    <!--Grid column-->
+                </div>
+            </div>
         </div>
-    </div>
-</main>
+        <!--Grid row-->
+
+    </main>
+    <!--Main layout-->
+
+</body>
 {% endblock body %}
