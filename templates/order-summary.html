@@ -66,8 +66,6 @@
                         {% empty %}
                         <div class="text-center mt-3"><b>Your cart is empty</b></div>
                         <br>
-                        <a class="btn btn-outline-light mb-3" href="/"><b>CONTINUE
-                                SHOPPING</b></a>
                         {% endfor %}
                         <a class="btn btn-outline-light mb-3" href="/"><b>CONTINUE
                                 SHOPPING</b></a>
@@ -140,8 +138,10 @@
                             </div>
                         </form>
                         <!-- Promo code -->
+                        {% if object.get_total %}
                         <a class="btn btn-outline-light mx-3" href="/checkout"><b>CONTINUE TO
                                 CHECKOUT</b></a>
+                        {% endif %}
 
                     </div>
                     <!--Grid column-->

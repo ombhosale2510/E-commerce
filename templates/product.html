@@ -96,16 +96,33 @@
 
         <!--Grid row-->
         <div class="row wow fadeIn justify-content-center">
-
+            {% if object.additional_image1 %}
             <!--Grid column-->
             <div class="col-lg-4 col-md-12 mb-4">
 
-                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg"
-                    class="img-fluid float-center" alt="">
+                <img src="{{ object.additional_image1.url }}" class="img-fluid float-center" alt="">
 
             </div>
             <!--Grid column-->
+            {% endif %}
+            {% if object.additional_image2 %}
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-12 mb-4">
 
+                <img src="{{ object.additional_image2.url }}" class="img-fluid float-center" alt="">
+
+            </div>
+            <!--Grid column-->
+            {% endif %}
+            {% if object.additional_image3 %}
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-12 mb-4">
+
+                <img src="{{ object.additional_image3.url }}" class="img-fluid float-center" alt="">
+
+            </div>
+            <!--Grid column-->
+            {% endif %}
         </div>
         <!--Grid row-->
 

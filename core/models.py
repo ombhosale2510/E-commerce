@@ -26,6 +26,12 @@ class Item(models.Model):
     image = models.ImageField(upload_to="img/%y")
     slug = models.SlugField(default="test-product")
     description = models.TextField()
+    additional_image1 = models.ImageField(
+        upload_to="img/%y", blank=True, null=True)
+    additional_image2 = models.ImageField(
+        upload_to="img/%y", blank=True, null=True)
+    additional_image3 = models.ImageField(
+        upload_to="img/%y", blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -92,3 +98,6 @@ class Order(models.Model):
         for order_item in self.items.all():
             total += order_item.get_final_price()
         return total
+
+    def get_total_promo(self):
+        pass
