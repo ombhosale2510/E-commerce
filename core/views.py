@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
-from .models import Item, OrderItem, Order
+from .models import Item, OrderItem, Order, Coupon
 
 # Create your views here.
 
@@ -28,7 +28,7 @@ def checkout(request):
 
 class HomeView(ListView):
     model = Item
-    paginate_by = 4
+    paginate_by = 8
     template_name = "home.html"
 
 
@@ -109,17 +109,18 @@ def remove_from_cart(request, slug):
             )[0]
             order.items.remove(order_item)
             order_item.delete()
+            # order.delete()
             messages.info(
                 request, "Item has been successfully removed from your cart!")
             return redirect("core:order-summary")
         else:
             messages.info(request, "Item was never in your cart")
-            return redirect("core:product", slug=slug)
+            return redirect("core:order-summary")
     else:
         # Add a message saying the user doesn't have an order
         messages.info(
             request, "Item is not in your cart | You do not have an active order")
-        return redirect("core:product", slug=slug)
+        return redirect("core:order-summary")
 
 
 def remove_single_item_from_cart(request, slug):
@@ -153,3 +154,19 @@ def remove_single_item_from_cart(request, slug):
         # Add a message saying the user doesn't have an order
         messages.info(request, "You do not have an active order!")
         return redirect("core:product", slug=slug)
+
+
+def coupon_apply(request):
+    now = timezone.now()
+    form = CouponApplyForm(request.POST)
+    if form.is_valid():
+        code = form.cleaned_data['code']
+        try:
+            coupon = Coupon.objects.get(code__iexact=code,
+                                        valid_from__lte=now,
+                                        valid_from__gte=now,
+                                        active=True
+                                        )
+        except Coupon.DoesNotExist:
+            messages.info(request, "This coupon code is invalid!")
+    return redirect("core:order-summary")

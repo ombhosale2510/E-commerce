@@ -61,7 +61,7 @@
                 <!-- Right -->
                 <ul class="navbar-nav nav-flex-icons">
                     {% if request.user.is_authenticated %}
-                    <li class="nav-item">
+                    <li class="nav-item {% block cartactive %}{% endblock cartactive %}">
                         <a class="nav-link waves-effect" href="/order-summary">
                             <span class="badge red z-depth-1 mr-1"> {{ request.user|cart_item_count }} </span>
                             <i class="fas fa-shopping-cart"></i>

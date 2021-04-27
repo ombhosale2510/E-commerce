@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 from django.shortcuts import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django import forms
 
 
 CATEGORY_CHOICES = (
@@ -32,6 +34,7 @@ class Item(models.Model):
         upload_to="img/%y", blank=True, null=True)
     additional_image3 = models.ImageField(
         upload_to="img/%y", blank=True, null=True)
+    additional_info = models.TextField(default="This is a description field.")
 
     def __str__(self):
         return self.title
@@ -99,5 +102,24 @@ class Order(models.Model):
             total += order_item.get_final_price()
         return total
 
-    def get_total_promo(self):
-        pass
+    def get_total_coupon(self):
+        total = 0
+        total = self.get_total() - Coupon.discount
+        return total
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=15, unique=True)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+
+    discount = models.FloatField()
+
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code
+
+
+class CouponApplyForm(forms.Form):
+    code = forms.CharField()
