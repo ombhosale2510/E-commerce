@@ -1,9 +1,11 @@
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
-from .models import Item, OrderItem, Order, Coupon
+from .models import Item, OrderItem, Order
 
 # Create your views here.
 
@@ -32,7 +34,7 @@ class HomeView(ListView):
     template_name = "home.html"
 
 
-class OrderSummaryView(View):
+class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
@@ -57,6 +59,7 @@ class ItemDetailView(DetailView):
     template_name = "product.html"
 
 
+@login_required
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
@@ -91,6 +94,7 @@ def add_to_cart(request, slug):
         return redirect("core:order-summary")
 
 
+@login_required
 def remove_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_qs = Order.objects.filter(
@@ -154,19 +158,3 @@ def remove_single_item_from_cart(request, slug):
         # Add a message saying the user doesn't have an order
         messages.info(request, "You do not have an active order!")
         return redirect("core:product", slug=slug)
-
-
-def coupon_apply(request):
-    now = timezone.now()
-    form = CouponApplyForm(request.POST)
-    if form.is_valid():
-        code = form.cleaned_data['code']
-        try:
-            coupon = Coupon.objects.get(code__iexact=code,
-                                        valid_from__lte=now,
-                                        valid_from__gte=now,
-                                        active=True
-                                        )
-        except Coupon.DoesNotExist:
-            messages.info(request, "This coupon code is invalid!")
-    return redirect("core:order-summary")

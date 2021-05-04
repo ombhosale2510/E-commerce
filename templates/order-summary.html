@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% load static %}
+{% load cart_template_tags %}
 {% block cartactive %} active {% endblock cartactive %}
 {% block title %}Shopping Bag{% endblock title %}
 {% block head %}
@@ -83,7 +84,7 @@
                     <!-- Heading -->
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-white">Your cart</span>
-                        <span class="badge badge-secondary badge-pill">3</span>
+                        <span class="badge badge-secondary badge-pill">{{ request.user|cart_item_count }}</span>
                     </h4>
 
                     <!-- Cart -->

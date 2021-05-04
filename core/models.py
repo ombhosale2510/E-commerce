@@ -106,20 +106,3 @@ class Order(models.Model):
         total = 0
         total = self.get_total() - Coupon.discount
         return total
-
-
-class Coupon(models.Model):
-    code = models.CharField(max_length=15, unique=True)
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-
-    discount = models.FloatField()
-
-    active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.code
-
-
-class CouponApplyForm(forms.Form):
-    code = forms.CharField()
