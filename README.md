@@ -15,3 +15,7 @@ Step 3:
 py manage.py runserver
 ```
 
+Step 4:
+```
+pip install -r requirements.txt
+```
